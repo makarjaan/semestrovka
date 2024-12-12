@@ -1,0 +1,66 @@
+package ru.kpfu.itis304.servlet;
+
+import ru.kpfu.itis304.dao.UserDao;
+import ru.kpfu.itis304.dto.UserDto;
+import ru.kpfu.itis304.entity.User;
+import ru.kpfu.itis304.service.UserService;
+import ru.kpfu.itis304.service.impl.UserServiceImpl;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.logging.Logger;
+
+@WebServlet("/registration")
+public class RegistrationServlet extends HttpServlet {
+
+    public UserService userService;
+
+    private static final Logger LOG  = Logger.getLogger(RegistrationServlet.class.getName());
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        userService = (UserService) getServletContext().getAttribute("userService");
+    }
+
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LOG.info("Запрошена страница регистрации на сайт");
+        getServletContext().getRequestDispatcher("/WEB-INF/view/registration.jsp").forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String username = req.getParameter("username");
+        String email = req.getParameter("email");
+        String phone = req.getParameter("phone");
+        String password = req.getParameter("password");
+
+        LOG.info("Попытка регистрации пользователя: " + email);
+
+        if (username != null && email != null && phone != null && password != null) {
+            try {
+                if (!userService.addDatabase(email, password)) {
+                    UserDto user = new UserDto(username, email, phone, password, null);
+                    userService.registerUser(user);
+                    LOG.info("Начинаю сессию для пользователя с email: " + email);
+                    userService.authenticateUser(user, req, resp);
+                    LOG.info("Пользователь с email " + user.getEmail() + "зарегистрирован в системе.");
+                    getServletContext().getRequestDispatcher("/WEB-INF/view/main.jsp").forward(req, resp);
+                } else {
+                    req.setAttribute("errorMessage", "Вы уже зарегистрированы! Войдите в аккаунт");
+                    getServletContext().getRequestDispatcher("/WEB-INF/view/registration.jsp").forward(req, resp);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+}
