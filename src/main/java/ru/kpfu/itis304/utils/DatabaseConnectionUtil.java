@@ -31,7 +31,7 @@ public final class DatabaseConnectionUtil {
             } catch (SQLException | ClassNotFoundException e) {
                 log.error("jdbc:postgresql://%s:%s/%s"
                         .formatted(System.getenv("PROD_DB_HOST"),
-                                        System.getenv("PROD_DB_PORT"), System.getenv("PROD_DB_PORT"),
+                                        System.getenv("PROD_DB_PORT"),
                                 System.getenv("PROD_DB_NAME")));
                 log.error("%s".formatted(System.getenv("PROD_DB_USERNAME")));
                 log.error("%s".formatted(System.getenv("PROD_DB_PASSWORD")));

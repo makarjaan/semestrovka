@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 
+
 @WebFilter(urlPatterns = "/*", filterName = "authFilter")
 public class AuthFilter implements Filter {
 
@@ -24,6 +25,7 @@ public class AuthFilter implements Filter {
         String previousUri = (String) httpServletRequest.getSession().getAttribute("previousUri");
         httpServletRequest.getSession().setAttribute("previousUri", uri);
 
+        LOG.info("ulr : %s".formatted(previousUri));
         if (session == null && !uri.contains("/main")) {
             ((HttpServletResponse) response).sendRedirect(httpServletRequest.getServletContext().getContextPath() + "/main");
             return;
