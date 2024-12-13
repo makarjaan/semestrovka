@@ -15,9 +15,13 @@ public final class DatabaseConnectionUtil {
             try {
                 Class.forName("org.postgresql.Driver");
                 connection = DriverManager.getConnection(
-                        "jdbc:postgresql://localhost:5432/lodgify",
-                        "postgres",
-                        "1234"
+                        "jdbc:postgresql://%s:%s/%s"
+                                .formatted(System.getenv("PROD_DB_HOST"),
+
+                                        System.getenv("PROD_DB_PORT"),
+                                        System.getenv("PROD_DB_NAME"))
+                        ,"%s".formatted(System.getenv("PROD_DB_USERNAME")),
+                        "%s".formatted(System.getenv("PROD_DB_PASSWORD"))
                 );
             } catch (SQLException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
