@@ -1,10 +1,15 @@
 package ru.kpfu.itis304.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public final class DatabaseConnectionUtil {
+
+    private static final Logger log = LoggerFactory.getLogger(DatabaseConnectionUtil.class);
 
     private DatabaseConnectionUtil() {}
 
@@ -24,6 +29,7 @@ public final class DatabaseConnectionUtil {
                         "%s".formatted(System.getenv("PROD_DB_PASSWORD"))
                 );
             } catch (SQLException | ClassNotFoundException e) {
+                log.error("ошибочка {}", e.getMessage());
                 throw new RuntimeException(e);
             }
         }
