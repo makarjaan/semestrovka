@@ -54,7 +54,7 @@ public class AuthorizationServlet extends HttpServlet {
                     resp.sendRedirect(getServletContext().getContextPath() + "/main");
                 } else {
                     LOG.info("Неудачная попытка авторизации пользователя: " + email);
-                    req.setAttribute("errorMessage", "Неверно введён пароль или такого аккаунта не существует");
+                    req.setAttribute("errorMessage", "Неверно введён пароль или же такого аккаунта не существует");
                     getServletContext().getRequestDispatcher("/WEB-INF/view/auth.jsp").forward(req, resp);
                 }
             } catch (IOException | ServletException e) {

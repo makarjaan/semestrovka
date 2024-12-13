@@ -32,14 +32,12 @@ public class AuthFilter implements Filter {
         if (session != null) {
             UserDto user = (UserDto) session.getAttribute("user");
             if (user == null) {
-                LOG.info("Сессия не начата");
-                if (uri.contains("logout") || uri.contains("settings")) {
+                if (uri.contains("logout") || uri.contains("settings") || uri.contains("addadvert")) {
                     httpServletResponse.sendRedirect(previousUri);
                 } else {
                     chain.doFilter(request, response);
                 }
             } else {
-                LOG.info("Сессия для пользователя  " + user.getEmail());
                 if (uri.contains("registration") || uri.contains("authorization")) {
                     httpServletResponse.sendRedirect(previousUri);
                 } else {

@@ -32,7 +32,6 @@ public class MainServlet extends HttpServlet {
         LOG.info("Запрошена главная страница");
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
         if (userDto != null) {
-            LOG.info(userDto.getEmail());
             req.setAttribute("user", userService.getByEmail(userDto.getEmail()));
         }
         getServletContext().getRequestDispatcher("/WEB-INF/view/main.jsp").forward(req, resp);

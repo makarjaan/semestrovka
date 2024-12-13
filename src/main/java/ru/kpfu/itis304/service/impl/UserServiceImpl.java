@@ -48,6 +48,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void deleteUser(UserDto userDto, HttpServletRequest req) {
+        User u = userDao.getByEmail(userDto.getEmail());
+        userDao.deleteUser(u);
+        HttpSession session = req.getSession(false);
+        session.invalidate();
+    }
+
+    @Override
     public void authenticateUser(UserDto userDto, HttpServletRequest req, HttpServletResponse resp) {
         HttpSession httpSession = req.getSession();
         httpSession.setAttribute("user", userDto);

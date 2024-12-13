@@ -11,6 +11,8 @@ public interface UserService {
 
     void registerUser(UserDto userDto);
 
+    void deleteUser(UserDto userDto, HttpServletRequest req);
+
     void authenticateUser(UserDto userDto, HttpServletRequest req, HttpServletResponse resp);
 
     boolean addDatabase(String email, String password);

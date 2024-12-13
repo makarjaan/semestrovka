@@ -20,4 +20,6 @@ public interface UserDao {
 
     void changePassword(User user, String newPassword);
 
+    void deleteUser(User user);
+
 }

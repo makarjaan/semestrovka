@@ -107,6 +107,18 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public void deleteUser(User user) {
+        try {
+            String sql = "DELETE FROM users WHERE email = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, user.getEmail());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void updateProfilePhoto(User user) {
         try {
             String sql = "UPDATE users SET profile_photo_url = ? WHERE email = ?";

@@ -43,12 +43,6 @@ public class SettingsServlet extends HttpServlet {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
         req.setAttribute("user", userService.getByEmail(userDto.getEmail()));
 
-        String activeTab = req.getParameter("activeTab");
-        if (activeTab == null) {
-            activeTab = "advertisement";
-        }
-        req.setAttribute("activeTab", activeTab);
-
         getServletContext().getRequestDispatcher("/WEB-INF/view/settings.jsp").forward(req, resp);
     }
 
@@ -60,6 +54,8 @@ public class SettingsServlet extends HttpServlet {
 
         String currentPassword = req.getParameter("currentPassword");
         String newPassword = req.getParameter("newPassword");
+
+        LOG.info(action);
 
         if ("uploadPhoto".equals(action)) {
             Part part = req.getPart("profilePhoto");
@@ -103,6 +99,13 @@ public class SettingsServlet extends HttpServlet {
             profileService.changePassword(user, newPassword);
             LOG.info("Пользователь: " + user.getEmail() + "изменил пароль");
         }
+
+        if ("deleteAccount".equals(action)) {
+            userService.deleteUser(user, req);
+            resp.sendRedirect(getServletContext().getContextPath() + "/main");
+            return;
+        }
+
         resp.sendRedirect(getServletContext().getContextPath() + "/settings");
     }
 }

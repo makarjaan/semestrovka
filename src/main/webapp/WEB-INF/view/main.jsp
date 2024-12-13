@@ -2,7 +2,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<t:nav title="Main page">
+<t:nav title="Главная страница">
     <div class="main-page">
         <div class="background-container-main">
 
