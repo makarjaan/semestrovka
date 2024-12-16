@@ -1,5 +1,6 @@
 package ru.kpfu.itis304.dao;
 
+import ru.kpfu.itis304.dto.UserDto;
 import ru.kpfu.itis304.entity.User;
 
 public interface UserDao {
@@ -21,5 +22,7 @@ public interface UserDao {
     void changePassword(User user, String newPassword);
 
     void deleteUser(User user);
+
+    Integer getId(String email);
 
 }

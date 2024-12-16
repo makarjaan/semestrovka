@@ -1,7 +1,11 @@
 package ru.kpfu.itis304.servlet;
 
 
+import ru.kpfu.itis304.dto.ApartmentRentDto;
+import ru.kpfu.itis304.dto.ApartmentSaleDto;
 import ru.kpfu.itis304.dto.UserDto;
+import ru.kpfu.itis304.service.ApartmentService;
+import ru.kpfu.itis304.service.PhotoService;
 import ru.kpfu.itis304.service.ProfileService;
 import ru.kpfu.itis304.service.UserService;
 
@@ -13,6 +17,7 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -25,6 +30,8 @@ public class SettingsServlet extends HttpServlet {
 
     public ProfileService profileService;
     public UserService userService;
+    public PhotoService photoService;
+    public ApartmentService apartmentService;
 
     public static final Logger LOG = Logger.getLogger(SettingsServlet.class.getName());
 
@@ -34,6 +41,8 @@ public class SettingsServlet extends HttpServlet {
         super.init(config);
         profileService = (ProfileService) getServletContext().getAttribute("profileService");
         userService = (UserService) getServletContext().getAttribute("userService");
+        photoService = (PhotoService) getServletContext().getAttribute("photoService");
+        apartmentService = (ApartmentService) getServletContext().getAttribute("apartmentService");
     }
 
     @Override
@@ -42,6 +51,21 @@ public class SettingsServlet extends HttpServlet {
 
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
         req.setAttribute("user", userService.getByEmail(userDto.getEmail()));
+
+        ApartmentSaleDto apartmentSaleDto = (ApartmentSaleDto) req.getSession().getAttribute("apartmentSaleDto");
+        ApartmentRentDto apartmentRentDto = (ApartmentRentDto) req.getSession().getAttribute("apartmentRentDto");
+
+        List<ApartmentRentDto> apartmentsRent = apartmentService.getApartRentListById(userService.getId(userDto));
+        List<ApartmentSaleDto> apartmentsSale = apartmentService.getApartSaleListById(userService.getId(userDto));
+
+
+        //нужно написать метод чтоб доставать время создании публицкации из базы данных
+        //apartmentsRent.sort((a1, a2) -> a2.);
+
+        req.setAttribute("apartmentsSale", apartmentsSale);
+        req.setAttribute("apartmentsRent", apartmentsRent);
+
+
 
         getServletContext().getRequestDispatcher("/WEB-INF/view/settings.jsp").forward(req, resp);
     }
@@ -55,26 +79,16 @@ public class SettingsServlet extends HttpServlet {
         String currentPassword = req.getParameter("currentPassword");
         String newPassword = req.getParameter("newPassword");
 
-        LOG.info(action);
 
         if ("uploadPhoto".equals(action)) {
             Part part = req.getPart("profilePhoto");
             if (part != null && part.getSize() > 0) {
+
                 String filename = Paths.get(part.getSubmittedFileName()).getFileName().toString();
-
-                File tempFile = File.createTempFile("profile_", filename);
-
-                try (InputStream content = part.getInputStream();
-                     OutputStream out = Files.newOutputStream(tempFile.toPath())) {
-                    byte[] buffer = new byte[1024];
-                    int count;
-                    while ((count = content.read(buffer)) != -1) {
-                        out.write(buffer, 0, count);
-                    }
-                }
+                File tempFile = photoService.makeFile(part, filename);
 
                 try {
-                    String fileUrl = profileService.uploadProfilePhoto(tempFile, filename);
+                    String fileUrl = photoService.uploadProfilePhoto(tempFile, filename);
                     profileService.updatePhoto(user, fileUrl);
                     LOG.info("Пользователь: " + user.getEmail() + "изменил фото профиля");
                 } catch (IOException e) {

@@ -12,24 +12,16 @@ import ru.kpfu.itis304.utils.PasswordUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 import java.util.logging.Logger;
 
 public class ProfileServiceImpl implements ProfileService {
-    private final Cloudinary cloudinary;
+
     private final UserDao userDao;
     private final static Logger LOG = Logger.getLogger(ProfileServiceImpl.class.getName());
 
     public ProfileServiceImpl(UserDao userDao) {
-        this.cloudinary = CloudinaryUtil.getInstance();
         this.userDao = userDao;
-    }
-    @Override
-    public String uploadProfilePhoto(File file, String filename) throws IOException {
-        Map<String, Object> uploadParams = Map.of("public_id", filename);
-        Map uploadResult = cloudinary.uploader().upload(file, uploadParams);
-        return (String) uploadResult.get("secure_url");
     }
 
     @Override

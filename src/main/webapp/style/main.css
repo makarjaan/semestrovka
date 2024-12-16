@@ -105,6 +105,16 @@ button:hover {
     cursor: pointer;
 }
 
+/*  нажатая округленная кнопка */
+.rounded-custom-btn {
+    background-color: #007568;
+    color: aliceblue;
+    border: 2px solid #007568;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 16px;
+}
+
 .custom-btn:hover {
     background-color: #007568;
     color: white;
@@ -152,15 +162,35 @@ a:hover {
 
 /* скрыть имя на навигационной модели */
 .user-name {
-    max-width: 200px;
+    max-width: 150px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* ограничение ширины для имени в навигационной модели*/
-.nav-item {
-    max-width: 200px;
+
+/* Стили для ссылок вкладок */
+.nav-tabs .nav-link {
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #007568;
+    font-size: 16px;
+    margin: 0 10px;
+    transition: all 0.3s ease;
 }
+
+/* Активная вкладка */
+.nav-tabs .nav-link.active {
+    color: #007568;
+    border-color: #007568;
+    font-weight: bold;
+}
+
+/* При наведении */
+.nav-tabs .nav-link:hover {
+    color: #ffffff;
+    border-color: #20b2aa;
+}
+
 
 

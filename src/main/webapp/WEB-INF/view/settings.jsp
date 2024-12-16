@@ -5,14 +5,14 @@
 <t:nav title="Настройки">
   <div class="container">
     <div class="row mt-4">
-        <div class="col-md-3 me-2 border-end" >
+        <div class="col-md-3 me-4 border-end" >
             <div class="d-flex flex-column align-items-center text-center">
                 <img src="${user.profilePhotoUrl != null ? user.profilePhotoUrl : 'https://res.cloudinary.com/dqm8yufmb/image/upload/v1733780390/%D0%94%D0%B5%D1%84%D0%BE%D0%BB%D1%82%D0%BD%D0%B0%D1%8F_%D0%B0%D0%B2%D0%B0%D1%82%D0%B0%D1%80%D0%BA%D0%B0_adpx3f.jpg'}"
                      class="rounded-circle mb-3" width="150" height="150">
-                <h5 class="fw-bold user-name fs-4 text-center" style="color: #1a1d20">${user.name}</h5>
+                <h5 class="text-center text-break" style="font-size: 20px; color: #1a1d20; max-width: 200px;">${user.name}</h5>
             </div>
 
-            <hr class="my-4">
+            <hr class="my-3">
 
             <form action="<c:url value="/settings"/>" method="get">
                 <div class="nav flex-column">
@@ -37,9 +37,52 @@
             <section id="advertisement" class="tab-section d-none">
                 <h2>Мои объявления</h2>
 
-                <form id="addnewappartment" class="form-horizontal" action="<c:url value="/addadvert"/>" method="post">
-                    <button type="submit" class="btn-primary mt-4" >Разместить объявление</button>
-                </form>
+
+
+                <c:if test="${empty apartmentsSale && empty apartmentsRent}">
+
+                    <hr class="my-3">
+
+                    <h3>У вас пока нет объявлений</h3>
+
+                    <form action="<c:url value="/addadvert"/>" method="get">
+                        <button type="submit" class="custom-btn  mt-4">Разместить объявление</button>
+                    </form>
+                </c:if>
+
+                <c:if test="${not empty apartmentsSale || not empty apartmentsRent}">
+                    <div class="container mt-4">
+                        <nav>
+                            <div class="nav nav-tabs justify-content-center border-bottom-0" id="nav-tab" role="tablist">
+                                <button class="nav-link active" id="nav-sale-tab" data-bs-toggle="tab" data-bs-target="#nav-sale" type="button"
+                                        role="tab" aria-controls="nav-sale" aria-selected="true">Продажа</button>
+                                <button class="nav-link" id="nav-rent-tab" data-bs-toggle="tab" data-bs-target="#nav-rent" type="button"
+                                        role="tab" aria-controls="nav-rent" aria-selected="false">Аренда</button>
+                            </div>
+                        </nav>
+                        <div class="tab-content mt-3" id="nav-tabContent">
+                            <div class="tab-pane fade show active" id="nav-sale" role="tabpanel" aria-labelledby="nav-sale-tab">
+                                <div class="container">
+                                    <div class="card flex-row align-items-center" style="border: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                                        <img src="https://via.placeholder.com/150" class="card-img-left" style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px;">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card Title</h5>
+                                            <p class="card-text">This is an example of a card where the image is on the left and the text is on the right, spanning the full width of the container.</p>
+                                            <a href="#" class="custom-btn">Read More</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="nav-rent" role="tabpanel" aria-labelledby="nav-rent-tab">
+                                Контент для вкладки "Аренда"
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </c:if>
             </section>
 
             <section id="profile" class="tab-section d-none">
@@ -133,40 +176,13 @@
                         confirmationModal.show();
                     });
                 </script>
+
             </section>
         </div>
     </div>
   </div>
+
+  <script src="${pageContext.request.contextPath}/js/api-sidebar.js"></script>
+
 </t:nav>
 
-<script>
-
-    $(document).ready(function () {
-        $("a[data-tab]").click(function (e) {
-            e.preventDefault();
-            var tabName = $(this).data("tab");
-
-            loadTabContent(tabName);
-
-            $(".tab-section").addClass("d-none");
-            $("#" + tabName).removeClass("d-none");
-
-            $("a[data-tab]").removeClass("title");
-            $(this).addClass("title");
-        });
-
-
-        function loadTabContent(tabName) {
-            $.get('/settings', { activeTab: tabName }, function(response) {
-                $('#tabContent').html(response);
-            });
-        }
-
-
-        var initialTab = 'advertisement';
-        loadTabContent(initialTab);
-        $("#" + initialTab).removeClass("d-none");
-    });
-
-
-</script>

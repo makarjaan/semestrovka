@@ -18,8 +18,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
 
-    private static final Logger LOG = Logger.getLogger(UserServiceImpl.class.getName());
-
     public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
@@ -34,6 +32,11 @@ public class UserServiceImpl implements UserService {
     public UserDto getByEmail(String email) {
         User u = userDao.getByEmail(email);
         return new UserDto(u.getName(), u.getEmail(), u.getPhone(), null, u.getProfilePhotoUrl());
+    }
+
+    @Override
+    public Integer getId(UserDto userDto) {
+        return userDao.getId(userDto.getEmail());
     }
 
     @Override

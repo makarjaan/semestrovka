@@ -8,8 +8,6 @@ import java.io.InputStream;
 
 public interface ProfileService {
 
-    String uploadProfilePhoto(File file, String filename) throws IOException;
-
     void updatePhoto(UserDto userDto, String fileUrl);
 
     void updateUserName(UserDto userDto, String userName);

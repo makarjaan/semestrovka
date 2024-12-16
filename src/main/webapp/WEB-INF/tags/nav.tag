@@ -35,6 +35,10 @@
                 <li><a class="dropdown-item" href="<c:url value='/logout'/>">Выйти</a></li>
               </ul>
             </li>
+
+            <div class="nav-item ms-2 d-flex align-items-center">
+              <a href="<c:url value='/addadvert'/>" class="custom-btn" style="font-size: 13px">Разместить объявление</a>
+            </div>
           </c:if>
 
           <c:if test="${user == null}">

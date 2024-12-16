@@ -19,5 +19,7 @@ public interface UserService {
 
     UserDto getByEmail(String email);
 
+    Integer getId(UserDto userDto);
+
 }
 
