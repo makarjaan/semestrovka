@@ -2,10 +2,9 @@ package ru.kpfu.itis304.enums;
 
 public enum ApartmentStatus {
     SENT_FOR_VERIFICATION("Отправлено на проверку"),
-    APPROVED("Публикация одобрена"),
     REFUSED("Отказано в публикации"),
     PUBLISHED("Опубликовано"),
-    COMPLETED("Сделка завершена");
+    COMPLETED("Снято с публикации");
 
     private final String apartStatus;
 

@@ -4,6 +4,7 @@ package ru.kpfu.itis304.servlet;
 import ru.kpfu.itis304.dto.ApartmentRentDto;
 import ru.kpfu.itis304.dto.ApartmentSaleDto;
 import ru.kpfu.itis304.dto.UserDto;
+import ru.kpfu.itis304.enums.ApartmentStatus;
 import ru.kpfu.itis304.service.ApartmentService;
 import ru.kpfu.itis304.service.PhotoService;
 import ru.kpfu.itis304.service.ProfileService;
@@ -17,7 +18,11 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 
@@ -55,17 +60,32 @@ public class SettingsServlet extends HttpServlet {
         ApartmentSaleDto apartmentSaleDto = (ApartmentSaleDto) req.getSession().getAttribute("apartmentSaleDto");
         ApartmentRentDto apartmentRentDto = (ApartmentRentDto) req.getSession().getAttribute("apartmentRentDto");
 
-        List<ApartmentRentDto> apartmentsRent = apartmentService.getApartRentListById(userService.getId(userDto));
-        List<ApartmentSaleDto> apartmentsSale = apartmentService.getApartSaleListById(userService.getId(userDto));
+        List<ApartmentRentDto> apartmentsRent = apartmentService.getApartmentRentListByUserId(userService.getId(userDto));
+        List<ApartmentSaleDto> apartmentsSale = apartmentService.getApartmentSaleListByUserId(userService.getId(userDto));
 
 
-        //нужно написать метод чтоб доставать время создании публицкации из базы данных
-        //apartmentsRent.sort((a1, a2) -> a2.);
+        apartmentsRent.sort((a1, a2) -> {
+            Timestamp t1 = apartmentService.getCreatedTimeRent(apartmentService.getApartId(a1));
+            Timestamp t2 = apartmentService.getCreatedTimeRent(apartmentService.getApartId(a2));
+
+            if (t1 == null && t2 == null) return 0;
+            if (t1 == null) return 1;
+            if (t2 == null) return -1;
+            return t2.compareTo(t1);
+        });
+
+        apartmentsSale.sort((a1, a2) -> {
+            Timestamp t1 = apartmentService.getCreatedTimeSale(apartmentService.getApartId(a1));
+            Timestamp t2 = apartmentService.getCreatedTimeSale(apartmentService.getApartId(a2));
+
+            if (t1 == null && t2 == null) return 0;
+            if (t1 == null) return 1;
+            if (t2 == null) return -1;
+            return t2.compareTo(t1);
+        });
 
         req.setAttribute("apartmentsSale", apartmentsSale);
         req.setAttribute("apartmentsRent", apartmentsRent);
-
-
 
         getServletContext().getRequestDispatcher("/WEB-INF/view/settings.jsp").forward(req, resp);
     }
@@ -88,7 +108,7 @@ public class SettingsServlet extends HttpServlet {
                 File tempFile = photoService.makeFile(part, filename);
 
                 try {
-                    String fileUrl = photoService.uploadProfilePhoto(tempFile, filename);
+                    String fileUrl = photoService.uploadPhoto(tempFile, filename);
                     profileService.updatePhoto(user, fileUrl);
                     LOG.info("Пользователь: " + user.getEmail() + "изменил фото профиля");
                 } catch (IOException e) {
@@ -118,6 +138,28 @@ public class SettingsServlet extends HttpServlet {
             userService.deleteUser(user, req);
             resp.sendRedirect(getServletContext().getContextPath() + "/main");
             return;
+        }
+
+
+        String dealType = req.getParameter("dealType");
+        String apartmentIdForDelete = req.getParameter("addvertApartIdForDelete");
+        if (apartmentIdForDelete != null && !apartmentIdForDelete.isEmpty()) {
+            int apartmentId = Integer.parseInt(apartmentIdForDelete);
+            if ("sale".equals(dealType)) {
+                apartmentService.deleteApartmentSaleById(apartmentId);
+            } else if ("rent".equals(dealType)) {
+                apartmentService.deleteApartmentRentById(apartmentId);
+            }
+        }
+
+        String addvertApartIdForUnpublish = req.getParameter("addvertApartIdForUnpublish");
+        if (addvertApartIdForUnpublish != null && !addvertApartIdForUnpublish.isEmpty()) {
+            int addvertId = Integer.parseInt(addvertApartIdForUnpublish);
+            if ("sale".equals(dealType)) {
+                apartmentService.updateStatus(addvertId, "sale", ApartmentStatus.COMPLETED);
+            } else if ("rent".equals(dealType)) {
+                apartmentService.updateStatus(addvertId, "rent", ApartmentStatus.COMPLETED);
+            }
         }
 
         resp.sendRedirect(getServletContext().getContextPath() + "/settings");

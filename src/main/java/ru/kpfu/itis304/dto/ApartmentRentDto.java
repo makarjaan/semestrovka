@@ -16,7 +16,6 @@ public class ApartmentRentDto {
     private String address;  // Полный адрес квартиры
     private String rentType; //вид аренды
     private int priceRent;  // Цена за аренду
-    private Date updateDate;
 
 
     public ApartmentRentDto(int userId, String title, String description,
@@ -33,6 +32,7 @@ public class ApartmentRentDto {
         this.rentType = rentType;
         this.priceRent = priceRent;
     }
+
 
     public int getUserId() {
         return userId;
@@ -57,7 +57,6 @@ public class ApartmentRentDto {
     public int getArea() {
         return area;
     }
-
 
     public String getStatus() {
         return status;

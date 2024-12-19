@@ -4,16 +4,19 @@ public class ApartPhoto {
     private int id;
     private int apartId;
     private String photoUrl;
+    private String typeApart;
 
-    public ApartPhoto(int id, int apartId, String photoUrl) {
+    public ApartPhoto(int id, int apartId, String photoUrl, String typeApart) {
         this.id = id;
         this.apartId = apartId;
         this.photoUrl = photoUrl;
+        this.typeApart = typeApart;
     }
 
-    public ApartPhoto(int apartId, String photoUrl) {
+    public ApartPhoto(int apartId, String photoUrl, String typeApart) {
         this.apartId = apartId;
         this.photoUrl = photoUrl;
+        this.typeApart = typeApart;
     }
 
     public int getId() {
@@ -38,5 +41,13 @@ public class ApartPhoto {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public String getTypeApart() {
+        return typeApart;
+    }
+
+    public void setTypeApart(String typeApart) {
+        this.typeApart = typeApart;
     }
 }

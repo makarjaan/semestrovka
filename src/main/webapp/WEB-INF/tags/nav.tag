@@ -17,6 +17,10 @@
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav ms-auto">
           <c:if test="${user != null}">
+            <div class="nav-item ms-2 d-flex align-items-center">
+              <a href="<c:url value='/addadvert'/>" class="custom-btn" style="font-size: 13px">Разместить объявление</a>
+            </div>
+
             <c:set var="profilePhotoUrl"
                    value="${user.profilePhotoUrl != null ?
                               user.profilePhotoUrl : 'https://res.cloudinary.com/dqm8yufmb/image/upload/v1733780390/%D0%94%D0%B5%D1%84%D0%BE%D0%BB%D1%82%D0%BD%D0%B0%D1%8F_%D0%B0%D0%B2%D0%B0%D1%82%D0%B0%D1%80%D0%BA%D0%B0_adpx3f.jpg'}" />
@@ -36,9 +40,7 @@
               </ul>
             </li>
 
-            <div class="nav-item ms-2 d-flex align-items-center">
-              <a href="<c:url value='/addadvert'/>" class="custom-btn" style="font-size: 13px">Разместить объявление</a>
-            </div>
+
           </c:if>
 
           <c:if test="${user == null}">
@@ -64,11 +66,14 @@
             <a class="nav-link" href="<c:url value="/main"/>">Главная</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/apartments">Квартиры</a>
+            <a class="nav-link" href="<c:url value="/apartments"/>">Квартиры</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/calculator">Калькулятор</a>
-          </li>
+          <c:if test="${not empty user}">
+            <li class="nav-item">
+              <a class="nav-link" href="<c:url value="/favorites"/>">Избранные</a>
+            </li>
+          </c:if>
+
         </ul>
       </div>
     </div>

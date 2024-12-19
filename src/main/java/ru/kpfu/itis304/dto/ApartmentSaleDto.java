@@ -14,7 +14,6 @@ public class ApartmentSaleDto {
     private String status; //в модерации, опубликован, забронирован, выключен или чё уже уф сколько ещё
     private String address;  // Полный адрес квартиры
     private int priceSale;  // Цена за аренду
-    private Date updateDate;
 
     public ApartmentSaleDto(int userId, String title, String description,
                             String type, String roomsCount,
@@ -30,6 +29,7 @@ public class ApartmentSaleDto {
         this.address = address;
         this.priceSale = priceSale;
     }
+
 
     public int getUserId() {
         return userId;

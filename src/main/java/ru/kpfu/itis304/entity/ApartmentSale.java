@@ -44,6 +44,7 @@ public class ApartmentSale {
         this.priceSale = priceSale;
     }
 
+
     public int getId() {
         return id;
     }

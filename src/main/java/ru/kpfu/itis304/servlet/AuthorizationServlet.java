@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -43,7 +44,21 @@ public class AuthorizationServlet extends HttpServlet {
 
         if (email != null && password != null) {
             try{
+                if (userService.addDatabase(email, password) && "admin@mail.ru".equals(email)) {
+                    LOG.info("Администратор вошёл в систему");
+                    HttpSession session = req.getSession(true);
+                    req.getSession().setAttribute("adminLogin", email);
+                    req.getSession().setAttribute("adminPassword", password);
+                    req.getSession().setAttribute("userRole", "admin");
+                    resp.sendRedirect(getServletContext().getContextPath() + "/admin");
+                    return;
+                }
+
                 if (userService.addDatabase(email, password)) {
+                    HttpSession oldSession = req.getSession(false);
+                    if (oldSession != null) {
+                        oldSession.invalidate();
+                    }
                     UserDto userDto = userService.getByEmailAndPassword(email, password);
                     LOG.info("Начинаю сессию для пользователя с email: " + email);
                     userService.authenticateUser(userDto, req, resp);

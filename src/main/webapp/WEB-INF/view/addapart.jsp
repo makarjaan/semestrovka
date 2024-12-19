@@ -4,7 +4,7 @@
 
 <t:nav title="Новое объявление">
     <div class="container">
-        <form action="<c:url value='/addadvert'/>" method="post">
+        <form action="<c:url value='/addadvert'/>" method="post" enctype="multipart/form-data">
             <div class="row mt-4">
                 <div class="col-md-3 me-4">
                     <div class="btn-group mb-3">
@@ -148,10 +148,10 @@
 
                     <div id="map" style="width: 100%; height: 400px;"></div>
 
-
-
-
-
+                    <div class="mb-5">
+                        <label for="images" class="form-label">Загрузить фотографии квартиры</label>
+                        <input type="file" class="form-control" id="images" name="images" accept="image/*" multiple>
+                    </div>
                 </div>
             </div>
         </form>

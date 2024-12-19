@@ -50,6 +50,7 @@ public class ApartmentRent {
         this.priceRent = priceRent;
     }
 
+
     public int getId() {
         return id;
     }
